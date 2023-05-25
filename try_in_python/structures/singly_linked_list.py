@@ -28,7 +28,7 @@ class SinglyLinkedList:
         Deletes first instance of `value` in the linked_list
         """
         pointer = self.head
-        if pointer.value == value:
+        if self.head.value == value:
             self.head = self.head.next
             return
         while pointer.next:

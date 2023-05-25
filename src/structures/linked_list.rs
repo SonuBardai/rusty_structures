@@ -1,52 +1,46 @@
-use std::{ptr::NonNull, rc::Rc};
+use std::fmt::Debug;
 
-#[derive(Clone, Copy)]
+#[derive(Debug)]
 pub struct Node<T> {
-    pub value: T,
-    pub next: Option<NonNull<Node<T>>>,
+    value: T,
+    next: Option<Box<Node<T>>>, // https://doc.rust-lang.org/rust-by-example/std/box.html
 }
 
 impl<T> Node<T> {
     pub fn new(value: T) -> Self {
-        Node {
-            value: value,
-            next: None,
-        }
+        return Node { value, next: None };
     }
 }
 
-pub struct RustLinkedList<T> {
-    pub head: Option<Node<T>>,
+#[derive(Debug)]
+pub struct LinkedList<T> {
+    head: Node<T>,
     length: u32,
 }
 
-impl<T> RustLinkedList<T> {
-    pub fn new(value: Option<T>) -> Self {
-        match value {
-            Some(value) => Self {
-                head: Some(Node {
-                    value: value,
-                    next: None,
-                }),
-                length: 1,
-            },
-            None => Self {
-                head: None,
-                length: 0,
-            },
-        }
+impl<T: Debug + PartialEq> LinkedList<T> {
+    pub fn new(value: T) -> Self {
+        let head = Node::new(value);
+        return LinkedList { head, length: 1 };
     }
 
-    pub fn insert(&mut self, value: Option<T>) {
-        match value {
-            Some(value) => {
-                let mut new_node = Node::new(value);
-                new_node.next = NonNull::new(self.head.as_mut().unwrap());
-                self.head = Some(new_node);
-            }
-            None => {
-                println!("Cannot insert None");
-            }
+    pub fn print(&self) {
+        let mut pointer = &self.head;
+        print!("head => {:?}", pointer.value);
+        while pointer.next.is_some() {
+            pointer = pointer.next.as_ref().unwrap();
+            print!(" => {:?}", pointer.value);
         }
+        println!("")
+    }
+
+    pub fn insert(&mut self, value: T) {
+        let new_node = Node::new(value);
+        let mut pointer = &mut self.head;
+        while pointer.next.is_some() {
+            pointer = pointer.next.as_mut().unwrap();
+        }
+        pointer.next = Some(Box::new(new_node));
+        self.length += 1;
     }
 }
