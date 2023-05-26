@@ -8,7 +8,7 @@ pub struct Node<T> {
 
 impl<T> Node<T> {
     pub fn new(value: T) -> Self {
-        return Node { value, next: None };
+        Node { value, next: None }
     }
 }
 
@@ -21,7 +21,7 @@ pub struct LinkedList<T> {
 impl<T: Debug + PartialEq> LinkedList<T> {
     pub fn new(value: T) -> Self {
         let head = Node::new(value);
-        return LinkedList { head, length: 1 };
+        LinkedList { head, length: 1 }
     }
 
     pub fn print(&self) {
@@ -31,7 +31,7 @@ impl<T: Debug + PartialEq> LinkedList<T> {
             pointer = pointer.next.as_ref().unwrap();
             print!(" => {:?}", pointer.value);
         }
-        println!("")
+        println!("\n");
     }
 
     pub fn insert(&mut self, value: T) {
@@ -44,3 +44,4 @@ impl<T: Debug + PartialEq> LinkedList<T> {
         self.length += 1;
     }
 }
+
